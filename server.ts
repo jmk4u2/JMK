@@ -1,4 +1,5 @@
 import express from 'express';
+import http from 'http';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -162,10 +163,15 @@ ${statsSummary}
 
 // Setup Vite middleware or Static files
 async function startServer() {
+  // Create the HTTP server up front so Vite's HMR websocket can attach to
+  // the same server/port instead of opening its own, which breaks behind
+  // a reverse proxy that only forwards a single port.
+  const httpServer = http.createServer(app);
+
   if (!isProd) {
     const { createServer: createViteServer } = await import('vite');
     const vite = await createViteServer({
-      server: { middlewareMode: true },
+      server: { middlewareMode: true, hmr: { server: httpServer } },
       appType: 'spa',
     });
     app.use(vite.middlewares);
@@ -176,7 +182,7 @@ async function startServer() {
     });
   }
 
-  app.listen(PORT, () => {
+  httpServer.listen(PORT, () => {
     console.log(`Server is running at http://0.0.0.0:${PORT}`);
   });
 }

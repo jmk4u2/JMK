@@ -63,7 +63,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* Main Title 2x Larger */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tight text-white leading-tight">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black tracking-tight text-white leading-tight">
             교육과정 평가·성과분석 보고서 도우미
           </h1>
 
